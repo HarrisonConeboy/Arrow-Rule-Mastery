@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!-- Necessary Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Honours Project</title>
+
+    <!-- Load D3 from site -->
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <!-- Link stylesheet -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+  </head>
+
+  <body>
+
+    <div class="scroll">
+      <div class="container">
+        <div id="tree" class="col">
+          <br><br><br><br><br><br><br><br><br><br><br><br>
+          <br><br><br><br><br><br><br><br><br><br><br>
+        </div>
+      </div>
+      
+      <div class="container">
+        <div class="row">
+            <div class="col" onkeypress="appendInputBox(event)" onkeydown="removeInputBox(event)">
+                <section id="literalinput">
+                    <input type="text" class="litInput noRemove" placeholder="A -> B">
+                </section>
+                <span>
+                  <ul>
+                    <li>Press ENTER to append a new input</li>
+                    <li>Press CTRL to delete an input</li>
+                    <li>Press on nodes to stick them</li>
+                  </ul>
+                </span>
+
+            </div>
+            <div class="col">
+              <span><button id="generateTreeButton" class="btn btn-primary">Generate/Reset</button>
+              <br>
+              <button id="totalButton" class="btn btn-success">Show Valid Evaluations</button><br>
+              <span style="font-size: large; font-weight: 600;">Show Cut</span>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" id="physics">
+                <span class="slider round"></span>
+              </label>
+              <div>Total: <span id="total-evaluations"></span></div>
+              <div>Valid States:</div>
+              <div id="valid-states"></div>
+            </div>
+            <div class="col">
+                <button id="evaluateTreeButton" class="btn btn-info">Evaluate Configuration</button><br>
+              Press an evaluation to change the graph -><br>
+              Green = <span style="color: green;">True</span><br>
+              Red = <span style="color: red;">False</span><br>
+            </div>
+            <!-- <div class="col"><button id="generateTableButton" class="btn-info">Generate Table-></button></div> -->
+            <div class="col">
+              <div id="tableTitle"></div>
+              <div id="truthtable" class="scrollable"></div>
+            </div>
+            
+            
+          </div>
+        </div>     
+      </div>
+    </div>
+
+    
+    
+
+
+    <!-- Begin Javascript for Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <!-- My Custom JavaScript -->
+    <script type="text/javascript" src="tree.js"></script>
+    <script src="//cdn.jsdelivr.net/filesaver.js/0.1/FileSaver.min.js"></script>
+
+
+    <!-- The following script adds and removes literal inputs -->
+    <script>
+
+      function appendInputBox(event) {
+        var inputs = document.querySelectorAll('.litInput')
+        for (var i = 0; i < inputs.length; i++) {
+          if (inputs[i].value == '') {
+            return
+          }
+        }
+        if (event.key === 'Enter') {
+          var input = document.createElement('input')
+          input.setAttribute('type', 'text')
+          input.classList.add('litInput')
+          input.placeholder = 'A -> B'
+          var breakE = document.createElement('br')
+          document.querySelector('#literalinput').appendChild(breakE)
+          document.querySelector('#literalinput').appendChild(input)
+          var nodes = document.querySelectorAll('.litInput')
+          var last = nodes[nodes.length - 1]
+          last.onkeypress = appendInputBox
+          last.focus()
+        } 
+      }
+
+      function removeInputBox(event) {
+        if (event.ctrlKey && !event.target.classList.contains("noRemove")) {
+          var br = event.target.previousSibling
+          var inputs = document.querySelectorAll('.litInput')
+          var prevInput = inputs[inputs.length - 2]
+          var parent = event.target.parentNode
+          parent.removeChild(event.target)
+          parent.removeChild(br)
+          prevInput.focus()
+        }
+      }
+    </script>
+
+  </body>
+</html>
