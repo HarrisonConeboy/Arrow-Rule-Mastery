@@ -363,6 +363,7 @@ function removePrevTree() {
 
 // MAIN FUNCTION TO GENERATE TREE
 function generateTree(tree_pairs) {
+    // Remove the previous simulation
     removePrevTree()
 
     var validStates = document.getElementById('valid-states')
@@ -370,11 +371,15 @@ function generateTree(tree_pairs) {
         validStates.removeChild(validStates.firstChild)
     }
 
+    var userInput = document.getElementById('userInputTable')
+    while (userInput.firstChild) {
+        userInput.removeChild(userInput.firstChild)
+    }
+
     document.getElementById('total-evaluations').textContent = ''
 
     var width = 1200,
         height = 450
-    var evaluated = false
 
     // // Get the data for the tree
     var circles_list = []
@@ -390,13 +395,13 @@ function generateTree(tree_pairs) {
 
     // Create circles for each of these nodes
     var nodes = d3.range(circles_list.length).map(function(i) {
-    return {
-        id: circles_list[i].nood,
-        x: circles_list[i].width + (Math.floor(Math.random() * 10)),
-        y: circles_list[i].height,
-        r: 15,
-        category: 0
-    };
+        return {
+            id: circles_list[i].nood,
+            x: circles_list[i].width + (Math.floor(Math.random() * 10)),
+            y: circles_list[i].height,
+            r: 15,
+            category: 0
+        };
     });
 
     nodes.push({
@@ -410,7 +415,7 @@ function generateTree(tree_pairs) {
     nodes.push({
         id:'F',
         x: 2 * width / 5,
-        y: height + 15,
+        y: height + 30,
         r: 20,
         category: 2
     })
@@ -480,9 +485,11 @@ function generateTree(tree_pairs) {
                 // .on("end", dragended)
         )
         .on("click", function(d) {
-            d3.select(this).classed("stuck", d3.select(this).classed("stuck") ? false : true)
-            d3.select(this).classed("unstuck", d3.select(this).classed("unstuck") ? false : true)
-            toggleStick(d)
+            if (!(d.id === 'T' || d.id === 'F')) {
+                d3.select(this).classed("stuck", d3.select(this).classed("stuck") ? false : true)
+                d3.select(this).classed("unstuck", d3.select(this).classed("unstuck") ? false : true)
+                toggleStick(d)
+            }
           })
 
     node.append("circle")
@@ -535,7 +542,7 @@ function generateTree(tree_pairs) {
     function dragged(d) {
         if (d.fx) {
             d.fx = d3.event.x
-            d.fy = d3.event.y
+            // d.fy = d3.event.y
         } else {
             d.x = d3.event.x;
             d.y = d3.event.y;
@@ -548,33 +555,13 @@ function generateTree(tree_pairs) {
             d.fx = null
         } else {
             d.fx = d.x
-            d.fy = d.y
+            // d.fy = d.y
         }     
     }
 
     // FUNCTION USED TO ALTER THE TREE
-    function highlightTree(e) {
-        var temp = e.target.textContent.split("\xa0")
-        var children = document.querySelectorAll('.table-entry')
-        for (var i = 0; i < children.length; i++) {
-            children[i].className = 'table-entry table-hover'
-        }
-        e.target.classList.add('activated')
-        e.target.classList.remove('table-hover')
-        var values = []
-        for (var i = 0; i < temp.length; i++) {
-            if (!(temp[i] === "")) {
-                values.push(temp[i])
-            }
-        }
-        temp = document.getElementById('tableTitle').textContent.split('\xa0')
-        var lits = []
-        for (var i = 0; i < temp.length; i++) {
-            if (!(temp[i] === "")) {
-                lits.push(temp[i])
-            }
-        }
-    
+    function highlightTree(values, lits) {
+
         for (var i = 0; i < lits.length; i++) {
             var node = d3.select('#' + lits[i])
             var not_node = d3.select('#not' + lits[i])
@@ -583,6 +570,7 @@ function generateTree(tree_pairs) {
                 node.each(function(d) { 
                     d.category = 1
                 })
+
                 if (not_node) {
                     not_node.each(function(d) { 
                         d.category = 2
@@ -600,9 +588,6 @@ function generateTree(tree_pairs) {
                 }
             }
         }
-        
-        // Physics which move nodes
-        checkPhysics()
 
         link.style('stroke', 'black')
         d3.selectAll('circle').style('fill', function(d) {
@@ -648,12 +633,7 @@ function generateTree(tree_pairs) {
 
     function generate() {
         removeAll()
-        var inputs = document.querySelectorAll('.litInput')
-        var imp_list = []
-        for (var i = 0; i < inputs.length; i++) {
-            var temp_list = inputs[i].value.split(" ")
-            imp_list.push([temp_list[0], temp_list[temp_list.length - 1]])
-        }
+        var imp_list = get_literals()
         console.log("Generate Table")
         var table = alter_table(produce_truth_table(countLiterals(imp_list)), imp_list)
         var container = document.getElementById("truthtable")
@@ -694,6 +674,21 @@ function generateTree(tree_pairs) {
 
     function checkPhysics() {
         if (document.getElementById('physics').checked) {
+            var lit_sliders = document.querySelectorAll('.lit_toggle')
+            var lit_inputs = []
+            var lits = []
+            for (var i = 0; i < lit_sliders.length; i++) {
+                    var id_length = lit_sliders[i].id.length - 6
+                    lits.push(lit_sliders[i].id.substring(0, id_length))
+                    if (lit_sliders[i].checked) {
+                        lit_inputs.push('1')
+                    } else {
+                        lit_inputs.push('0')
+                    }
+                
+            }            
+            
+            highlightTree(lit_inputs, lits)
             simulation.force('y', d3.forceY().y(function(d) {
                 return yCenters[d.category]
             }).strength(1))
@@ -706,7 +701,7 @@ function generateTree(tree_pairs) {
                 
                 svg.append('text').attr('y', height/2 - 20).attr('x', 100).attr('class', 'cut-true').style('fill', 'green').text('True')
                 svg.append('text').attr('y', height/2 + 30).attr('x', 100).attr('class', 'cut-false').style('fill', 'red').text('False')
-            } 
+            }
 
         } else {
             simulation.force('y', d3.forceY().y(function(d) {
@@ -763,6 +758,123 @@ function generateTree(tree_pairs) {
     document.getElementById('totalButton').addEventListener('click', function() {
         totalEvaluations()
     })
+
+    // Section where we append all of the user toggles used to change the state of each of the literals
+    var lit_list = countLiterals(get_literals())
+    var cont = document.getElementById('userInputTable')
+    for (var i = 0; i < lit_list.length; i++) {
+        var inp = document.createElement('span')
+        var lit = document.createElement('span')
+        lit.className = 'user-input-table py-1 px-3 ml-3'
+        lit.textContent = lit_list[i]
+        inp.appendChild(lit)
+        var brE = document.createElement('br')
+        var label = document.createElement('label')
+        label.className = 'switch ml-3'
+        var inp_two = document.createElement('input')
+        inp_two.type = 'checkbox'
+        inp_two.id = lit_list[i] + 'Toggle'
+        inp_two.addEventListener('click', function() {
+            changeInput()
+        })
+        inp_two.className = "lit_toggle"
+        var span = document.createElement('span')
+        span.className = 'slider-lit round'
+        label.appendChild(inp_two)
+        label.appendChild(span)
+        inp.appendChild(label)
+        cont.appendChild(inp)
+        cont.appendChild(brE)
+    }
+
+
+    function changeInput() {
+        var lit_sliders = document.querySelectorAll('.lit_toggle')
+            var lit_inputs = []
+            var lits = []
+            for (var i = 0; i < lit_sliders.length; i++) {
+                var id_length = lit_sliders[i].id.length - 6
+                lits.push(lit_sliders[i].id.substring(0, id_length))
+                if (lit_sliders[i].checked) {
+                    lit_inputs.push('1')
+                } else {
+                    lit_inputs.push('0')
+                } 
+            }
+
+        for (var i = 0; i < lits.length; i++) {
+            var node = d3.select('#' + lits[i])
+            var not_node = d3.select('#not' + lits[i])
+            if (lit_inputs[i] === '1') {
+                node.each(function(d) { 
+                    d.category = 1
+                })
+                if (not_node) {
+                    not_node.each(function(d) { 
+                        d.category = 2
+                        
+                    })
+                }
+            } 
+            else {
+                node.each(function(d) { 
+                    d.category = 2
+                })
+                if (not_node) {
+                    not_node.each(function(d) { 
+                        d.category = 1
+                    })
+                }
+            }
+        } 
+
+        link.style('stroke', 'black')
+        d3.selectAll('circle').style('fill', function(d) {
+            if (d.id === 'T') {
+                return 'lightgreen'
+            } else if (d.id === 'F') {
+                return 'red'
+            } else {
+                if (d.category === 1) {
+                    return 'lightgreen'
+                } else {
+                    return 'red'
+                }
+            }
+        })
+
+        // This used to move the selected nodes when the toggle inputs were pressed
+        if (document.getElementById('physics').checked) {
+            simulation.force('y', d3.forceY().y(function(d) {
+                return yCenters[d.category]
+            }).strength(1))
+            simulation.force("y").initialize(nodes)
+        }
+        
+    }
+
+    document.getElementById('unstickAllButton').addEventListener('click', function() {
+        unstickAll()
+    })
+
+    function unstickAll() {
+        d3.selectAll('.node').each(function(d) {
+            if (!(d.id === 'T' || d.id === 'F')) {
+                d3.select(this).classed("stuck", d3.select(this).classed("stuck") ? false : false)
+                d3.select(this).classed("unstuck", d3.select(this).classed("unstuck") ? true : true)
+                unstickNode(d)
+            }
+        })
+    }
+
+    function unstickNode(d) {
+        if (d.fx) {
+            d.fx = null
+        }
+    }
+
+    document.getElementById('physics').checked = false
+    simulation.alphaTarget(0.3).restart()
 }
 
 
@@ -770,17 +882,30 @@ function get_literals() {
     var inputs = document.querySelectorAll('.litInput')
     var imp_list = []
     for (var i = 0; i < inputs.length; i++) {
-        var temp_list = inputs[i].value.split(" ")
+        var temp_list = inputs[i].value.trim().split("->")
         var corrected = []
+        if (temp_list.length > 2) {
+            alert("Please don't place more than 1 implication per input")
+            return []
+        } else {
+            temp_list_2 = temp_list[0].split(' ').concat(temp_list[1].split(' '))
+        }
+        temp_list = []
+        for (var n = 0; n < temp_list_2.length; n++) {
+            if (!temp_list_2[n] == "") {
+                temp_list.push(temp_list_2[n])
+            }
+        }
+        if (temp_list.length > 2) {
+            alert('Please only have two literals per input')
+            return []
+        }
         for (var n = 0; n < temp_list.length; n++) {
             if (!(temp_list[n] === '')) {
                 corrected.push(temp_list[n])
             }
         }
-        if (!corrected.includes('->')) {
-            alert('Please include ->')
-            return []
-        } else if (corrected.includes('T')){
+        if (corrected.includes('T')){
             alert('Please do not use the literal T')
             return []
         } else if (corrected.includes('F')) {
