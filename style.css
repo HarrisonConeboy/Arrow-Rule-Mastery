@@ -4,8 +4,9 @@
     stroke-width: 3px;
 }
 
-#tree {
+#graph {
     border: black 2px solid;
+    height: 700px;
 }
 
 .table-entry, .table-title {
@@ -182,4 +183,8 @@ html {
   
   .slider-lit.round:before {
     border-radius: 50%;
+  }
+
+  #graphContainer {
+    border: black 2px solid;
   }

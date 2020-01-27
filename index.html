@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
   <head>
-    <!-- Necessary Meta Tags -->
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Load CSS -->
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Arrow Rule Mastery</title>
-
-    <!-- Load D3 from site -->
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-    <!-- Link stylesheet -->
-    <link rel="stylesheet" type="text/css" href="style.css">
-
+    <title>Hub</title>
   </head>
-
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-4">
-      <a class="navbar-brand" href="#">Arrow Rule</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Hub</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -31,122 +24,44 @@
             <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="hub.html">Link</a>
+            <a class="nav-link" href="tool.html">Tool</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="creator.html">Creator</a>
           </li>
         </ul>
       </div>
     </nav>
 
-    <div class="scroll">
-      <div class="container float-left">
-        <div id="tree" class="col">
-          <br><br><br><br><br><br><br><br><br><br><br><br>
-          <br><br><br><br><br><br><br><br><br><br><br>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="display-4 my-2">Online tool for Computation and Logic<br>Arrow Rule Mastery</h1>
+          <p class="lead">
+            This webapp was created to aid first year students in learning how many valid evaluations a conjunction of implications there are.<br>
+            Learn About:</p>
+            <section class="my-2">
+              <button class="btn btn-info">Implications</button>
+              <button class="btn btn-info">Conjunctions</button>
+              <button class="btn btn-info">The Arrow Rule</button>
+            </section>
+            <section class="my-5 jumbotron">
+              <br>
+              <button class="btn btn-secondary float-left">Back</button>
+              <button class="btn btn-secondary float-right">Next</button>
+            </section>
+            <section class="my-3">
+              <a href="#" class="btn btn-primary">Tutorial</a>
+              <a href="#" class="btn btn-primary">Tool</a>
+            </section>
         </div>
-        <div class="col"></div>
-      </div>
-      <div class="m-3" id="userInputTable">
-        <br>
-        <br>
-      </div>
-      <span style="font-size: large; font-weight: 600;">Show Cut</span>
-      <!-- Rounded switch -->
-      <label class="switch">
-        <input type="checkbox" id="physics">
-        <span class="slider round"></span>
-      </label>
-      <button id="evaluateTreeButton" class="btn btn-info">Evaluate Configuration</button>
-      <button id="unstickAllButton" class="btn btn-info">Unstick All</button>
-
-      
-      <div class="container float-left">
-        <div class="row">
-            <div class="col" onkeypress="appendInputBox(event)" onkeydown="removeInputBox(event)">
-              <button id="generateTreeButton" class="btn btn-primary float-right float-up">Generate/Reset</button>
-                <section id="literalinput">
-                    <input type="text" class="litInput noRemove" placeholder="A -> B">
-                </section>
-            </div>
-            <div class="col">
-              <span>
-                <h5 class="lead">Controls</h5>
-                <ul>
-                  <li>Press ENTER to append a new input</li>
-                  <li>Press DELETE to delete an input</li>
-                  <li>Press on nodes to stick them</li>
-                  <li>Graph supports zooming using scroll wheel</li>
-                </ul>
-              </span>
-            </div>
-            <div class="col">
-              <span>
-              <button id="totalButton" class="btn btn-success">Show Valid Evaluations</button><br>
-              <div>Total: <span id="total-evaluations"></span></div>
-              <div>Valid States:</div>
-              <div id="valid-states"></div>
-            </div>
-            <div class="col" style="display:none;">
-              <div id="tableTitle"></div>
-              <div id="truthtable" class="scrollable"></div>
-            </div>
-            
-            
-          </div>
-        </div>     
       </div>
     </div>
 
-    
-    
-
-
-    <!-- Begin Javascript for Bootstrap -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
-    <!-- My Custom JavaScript -->
-    <script type="text/javascript" src="tree.js"></script>
-    <script src="//cdn.jsdelivr.net/filesaver.js/0.1/FileSaver.min.js"></script>
-
-
-    <!-- The following script adds and removes literal inputs -->
-    <script>
-
-      function appendInputBox(event) {
-        var inputs = document.querySelectorAll('.litInput')
-        for (var i = 0; i < inputs.length; i++) {
-          if (inputs[i].value == '') {
-            return
-          }
-        }
-        if (event.key === 'Enter') {
-          var input = document.createElement('input')
-          input.setAttribute('type', 'text')
-          input.classList.add('litInput')
-          input.placeholder = 'A -> B'
-          var breakE = document.createElement('br')
-          document.querySelector('#literalinput').appendChild(breakE)
-          document.querySelector('#literalinput').appendChild(input)
-          var nodes = document.querySelectorAll('.litInput')
-          var last = nodes[nodes.length - 1]
-          last.onkeypress = appendInputBox
-          last.focus()
-        } 
-      }
-
-      function removeInputBox(event) {
-        if (event.keyCode == 46 && !event.target.classList.contains("noRemove")) {
-          var br = event.target.previousSibling
-          var inputs = document.querySelectorAll('.litInput')
-          var prevInput = inputs[inputs.length - 2]
-          var parent = event.target.parentNode
-          parent.removeChild(event.target)
-          parent.removeChild(br)
-          prevInput.focus()
-        }
-      }
-    </script>
-
   </body>
 </html>
