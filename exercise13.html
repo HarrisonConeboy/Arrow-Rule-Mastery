@@ -12,7 +12,6 @@
     <title>Arrow Rule Mastery</title>
 
     <!-- Load D3 from site -->
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="//d3js.org/d3.v3.js" charset="utf-8"></script>
     <!-- Link stylesheet -->
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -25,7 +24,7 @@
 
     <!-- Nav Menu -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-4" id="light-colour" style="border-bottom:solid 1px;">
-      <a class="navbar-brand" href="#">Sandbox</a>
+      <a class="navbar-brand" href="exercise-hub.html">Exercises</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -45,18 +44,29 @@
       </div>
     </nav>
 
-
-    <div class="container-fluid">
+    <a class="btn btn-light" href="exercise-hub.html" style="position:fixed; top: 80px; z-index: 50;">Back</a>
+    <div class="container">
       <div class="row">
         <div class="col">
-          <br>
-          <button id="resetButton" class="btn float-right">Reset</button>
-          <h1 class="display-4 mt-3"><span class="display-4 m-3">Sandbox Mode: <strong id="userMode">Input Implications</strong></span><br><span class="lead m-3">Here you can practice creating any implication graph</span></h1>
-          
+          <h1 class="display-4 mt-3"><span class="display-4 m-3">Exercise IV</span><br><span class="lead m-3">This is an exercise to help you practice and learn.</span></h1>
+        </div>
+      </div>
+        <div class="row">
+          <div class="col jumbotron">
+            <h1 style="text-align: left;">Instructions:</h1>
+            <p style="text-align:left">Draw and cut the tree which represents the implications given below.<br>
+              <i>Remember:</i> If you are unsure about the full controls, go back and practice with the tutorials.
+            <ul>
+              <span class="lead" style="text-align: left;">Objective:</span>
+              <li>Draw the implication graph with nodes and links.</li>
+              <li>Cut the graph produced, showing you the number of valid evaluations.</li>
+            </ul>
+          </p>
         </div>
         
       </div>
-
+    </div>
+    <div class="container-fluid">
       <div class="row">
         <!-- First 8 columns containing graph -->
         <div class="col-8">
@@ -68,8 +78,47 @@
             </div>
             
           </div>
-          
-          <div class="row" id="additionalRow" style="display: none;" class="my-2">
+        </div>
+        
+
+        <!-- User input area or exercise display area -->
+        <div class="col-4">
+          <div class="row">
+            <div class="col">
+              <button id="resetButton" class="btn float-right">Reset</button><br>
+              <span class="lead" style="font-size: 25px; text-align: left;">Implication List:</span>
+            </div>
+
+          </div>
+          <div class="row">
+            <br>
+          </div>
+          <div class="row" id="implicationDisplay" onkeypress="appendInputBox(event)" onkeydown="removeInputBox(event)">
+            <section id="literalinput">
+              <input type="text" class="litInput noRemove" placeholder="A -> B" disabled><br>
+              <input type="text" class="litInput noRemove" placeholder="A -> B" disabled><br>
+              <input type="text" class="litInput noRemove" placeholder="A -> B" disabled><br>
+              <input type="text" class="litInput noRemove" placeholder="A -> B" disabled><br>
+              <input type="text" class="litInput noRemove" placeholder="A -> B" disabled>
+            </section>
+          </div>
+          <div class="row">
+            <br> 
+          </div>
+          <div class="row">
+            <button id="generateTreeButton" class="btn btn-primary float-left">Verify Tree</button>
+          </div>
+          <hr style="border: solid 1px black; width: 100%;">
+          <div class="row my-1">
+            <div class="col">
+              <p class="lead" style="font-size: 25px; text-align: left;">Feedback: <button id="controlsButton" class="btn btn-md btn-dark float-right">Controls</button></p> 
+            </div>
+          </div>
+          <div class="row m-2">
+            <p id="userFeedbackTable" style="text-align: left; font-size: 23px;" class="lead p-3">Press anywhere on the canvas to begin a cut. Press SPACE to verify the cut.</p>
+          </div>
+
+          <div class="row" id="additionalRow" class="my-2" style="display: none;">
             <div class="col">
               <div class="row">
                 <div class="col">
@@ -80,70 +129,33 @@
               <div class="row">
                 <div class="col">
                   <!-- <button id="evaluateTreeButton" class="btn btn-info showCuts m-1">Evaluate Configuration</button><br> -->
-                  <button id="unstickAllButton" class="btn btn-info m-1">Unstick All</button>
+                  <button id="unstickAllButton" class="btn btn-info m-1">Unstick All Nodes</button>
                 </div>
               </div>
             </div>
             
           </div>
-        </div>
-        
-
-        <!-- User input area or exercise display area -->
-        <div class="col-4">
-          <div class="row">
-              <span class="lead" style="font-size: 25px; text-align: left;">Implication List:</span>
-          </div>
-          <div class="row">
-              <ul>
-                <li class="lead" style="font-size: 16px;">Press ENTER to append new implications</li>
-                <li class="lead" style="font-size: 16px;">Press DEL to delete selected implications</li>
-              </ul>           
-            </p>
-          </div>
-          <div class="row" id="implicationDisplay" onkeypress="appendInputBox(event)" onkeydown="removeInputBox(event)">
-            <section id="literalinput">
-              <input type="text" class="litInput noRemove" placeholder="A -> B">
-            </section>
-          </div>
-          <div class="row">
-            <br> 
-          </div>
-          <div class="row">
-            <button id="generateTreeButton" class="btn btn-primary float-left" disabled>Begin Drawing</button>
-            
-            
-          </div>
-          <hr style="border: solid 1px black; width: 100%;">
-          <div class="row my-1">
-            <div class="col">
-              <p class="lead" style="font-size: 25px; text-align: left;">Feedback: <button id="controlsButton" class="btn btn-md btn-dark float-right">Controls</button></p> 
-
-            </div>
-          </div>
-          <div class="row m-2">
-            <p id="userFeedbackTable" style="text-align: left; font-size: 23px;" class="lead p-3">Enter a conjunction of implications using the text inputs, then press 'Begin Drawing' to draw the tree.</p>
-          </div>
-          <hr style="border: solid 1px black; width: 100%;">
-          <div class="row">
-            <div class="col">
-              <button id="totalButton" class="btn btn-success m-1" style="display: none;">Show All Cuts/All Answers</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" id="answers" style="display: none;">
-              <div>Total: <span id="total-evaluations"></span></div>
-              <div>Valid Configurations:</div>
-              <div id="valid-states"></div>
-            </div>
+          
             <div class="col" style="display:none;">
               <div id="tableTitle"></div>
               <div id="truthtable" class="scrollable"></div>
             </div>
           </div>
         </div>
+        <hr style="border: solid 1px black; width: 100%;">
+      </div>
+
+      <div class="row mb-2">
+        <div class="col mx-3">
+          <a href="exercise12.html" class="btn btn-dark float-left">Previous Exercise</a>
+          <a href="exercise14.html" class="btn btn-dark float-right">Next Exercise</a>
+        </div>
       </div>
     </div>
+         
+
+
+
       
 
     
@@ -156,7 +168,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <!-- My Custom JavaScript -->
-    <script type="text/javascript" src="tree.js"></script>
+    
     <script src="//cdn.jsdelivr.net/filesaver.js/0.1/FileSaver.min.js"></script>
 
 
@@ -201,7 +213,15 @@
           e.preventDefault();
           }
       });
+      var inputs = document.querySelectorAll('.litInput')
+      inputs[0].value = 'A -> B'
+      inputs[1].value = 'B -> A'
+      inputs[2].value = 'C -> D'
+      inputs[3].value = 'D -> C'
+      inputs[4].value = 'E -> D'
     </script>
+
+    <script type="text/javascript" src="tree-ex11.js"></script>
 
   </body>
 </html>

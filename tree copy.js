@@ -676,7 +676,7 @@ function generateTree(tree_pairs) {
                         d3.select(lines[i]).attr('class', 'lineGreyed').attr('stroke', function() { return color(configurations.length)})
                     }
                     configurations.push(configuration)
-                    
+                    changeFeedback('Valid cut performed!')
                     checkAnswer()
                     
                 }
@@ -992,7 +992,7 @@ function generateTree(tree_pairs) {
 
     function generate() {
         removeAll()
-        var imp_list = get_literals()
+        // var imp_list = get_literals()
         console.log("Generate Table")
         var table = alter_table(produce_truth_table(countLiterals(imp_list)), imp_list)
         var container = document.getElementById("truthtable")
@@ -1247,12 +1247,12 @@ function get_literals() {
         }
         var temp_list = inputs[i].value.trim().split("->")
         if (temp_list.includes('-')) {
-            changeFeedback("Please do not include '-' besides in representing the arrow.")
+            changeFeedback("Please do not include '-' besides in representing the arrow")
             return []
         }
         var corrected = []
         if (temp_list.length > 2) {
-            changeFeedback("Please don't place more than 1 implication per input.")
+            alert("Please don't place more than 1 implication per input")
             return []
         } else {
             temp_list_2 = temp_list[0].split(' ').concat(temp_list[1].split(' '))
@@ -1264,7 +1264,7 @@ function get_literals() {
             }
         }
         if (temp_list.length > 2) {
-            changeFeedback('Please only have two literals per input.')
+            alert('Please only have two literals per input')
             return []
         }
         for (var n = 0; n < temp_list.length; n++) {
@@ -1273,10 +1273,10 @@ function get_literals() {
             }
         }
         if (corrected.includes('T')){
-            changeFeedback('Please do not use the literal T, consider using lowercase.')
+            alert('Please do not use the literal T')
             return []
         } else if (corrected.includes('F')) {
-            changeFeedback('Please do not use the literal F, consider using lowercase.')
+            alert('Please do not use the literal F')
             return []
         } else {
             imp_list.push([corrected[0], corrected[corrected.length - 1]])
@@ -2008,7 +2008,7 @@ function checkCycles(tree) {
                 try {
                     if (virtual_tree[child_nodes[n][child_nodes[n].length - 1]].children.length > 0) {
                         var temp_branch = child_nodes[n]
-                        child_nodes.splice(n, 1)
+                        child_nodes.splice(n, n + 1)
                         for (var j = 0; j < virtual_tree[temp_branch[temp_branch.length - 1]].children.length; j++) {
                             var temp_temp_branch = temp_branch.slice()
                             temp_temp_branch.push(virtual_tree[temp_branch[temp_branch.length - 1]].children[j])
@@ -2016,10 +2016,10 @@ function checkCycles(tree) {
                         }
                         
                     } else {
-                        child_nodes.splice(n, 1)
+                        child_nodes.splice(n, n + 1)
                     }
                 } catch {
-                    child_nodes.splice(n, 1)
+                    child_nodes.splice(n, n + 1)
                 }
                 
             }
@@ -2057,7 +2057,7 @@ function changeTreeForCycles(tree) {
             console.log(tree[i].nood)
             if (cycle.includes(tree[i].nood)) {
                 console.log(`Removing node: ${tree[i].nood}`)
-                tree.splice(i, 1)
+                tree.splice(i, i+1)
                 i--
             } else {
                 virtual_tree = createDictTree(tree)
@@ -2065,7 +2065,7 @@ function changeTreeForCycles(tree) {
                 var occur = false
                 for (var n = 0; n < temp_node.children.length; n++) {
                     if (cycle.includes(temp_node.children[n])) {
-                        temp_node.children.splice(n, 1)
+                        temp_node.children.splice(n, n+1)
                         console.log(`Removing child: ${temp_node.children[n]} from node: ${tree[i].nood}`)
                         n--
                         occur = true
@@ -2078,7 +2078,7 @@ function changeTreeForCycles(tree) {
                 for (var n = 0; n < temp_node.parents.length; n++) {
                     if (cycle.includes(temp_node.parents[n])) {
                         console.log(`Removing parent: ${temp_node.parents[n]} from node: ${tree[i].nood}`)
-                        temp_node.parents.splice(n, 1)
+                        temp_node.parents.splice(n, n+1)
                         n--
                         occur = true
                     }

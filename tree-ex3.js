@@ -6,7 +6,7 @@ function not_literal(literal) {
         return '!' + literal
     } 
 }
-var cycles_seen = []
+
 function contra_positive(implication) {
     return [not_literal(implication[1]), not_literal(implication[0])]
 }
@@ -421,7 +421,7 @@ function removePrevTree() {
 function generateTree(tree_pairs) {
     // Remove the previous simulation
     removePrevTree()
-    var completedCuts = false
+
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
     var validStates = document.getElementById('valid-states')
@@ -429,10 +429,10 @@ function generateTree(tree_pairs) {
         validStates.removeChild(validStates.firstChild)
     }
 
-    // var userInput = document.getElementById('userInputTable')
-    // while (userInput.firstChild) {
-    //     userInput.removeChild(userInput.firstChild)
-    // }
+    var userInput = document.getElementById('userInputTable')
+    while (userInput.firstChild) {
+        userInput.removeChild(userInput.firstChild)
+    }
 
     document.getElementById('total-evaluations').textContent = ''
 
@@ -499,27 +499,25 @@ function generateTree(tree_pairs) {
     function makeLine() {
 
         if (canMakeLine) {
-            if (!completedCuts) {
-                var m = d3.mouse(this); 
-                line = svg
-                    .append("line")
-                    .attr("x1", m[0])
-                    .attr("y1", m[1])
-                    .attr("x2", m[0])
-                    .attr("y2", m[1])
-                    .attr('class', 'lineCut')
-            
-                svg.on("mousemove", mousemove);
-                svg.on('click', makeLine)
-                document.body.onkeyup = function(e) {
-                    if (e.keyCode == 32) {
-                        svg.on('mousemove', null)
-                        evaluateLine()
-                    } 
-                }
+            var m = d3.mouse(this); 
+            line = svg
+                .append("line")
+                .attr("x1", m[0])
+                .attr("y1", m[1])
+                .attr("x2", m[0])
+                .attr("y2", m[1])
+                .attr('class', 'lineCut')
+        
+            svg.on("mousemove", mousemove);
+            svg.on('click', makeLine)
+            document.body.onkeyup = function(e) {
+                if (e.keyCode == 32) {
+                    svg.on('mousemove', null)
+                    evaluateLine()
+                } 
             }
+        }         
             
-        }   
     }
 
     function mousemove() {
@@ -547,12 +545,6 @@ function generateTree(tree_pairs) {
         var nodes_crossed = new Set()
         for (var i = 0; i < lines.length; i++) {
             // Check double back
-            if (over_lit) {
-                for (var n = i; n < lines.length; n++) {
-                    d3.select(lines[n]).remove()
-                }
-                break
-            }
             if (lines[i].x2.baseVal.value > x2 && x2 < x1) {
                 if (over_lit) {
                     for (var n = i; n < lines.length - i + 1; n++) {
@@ -601,21 +593,9 @@ function generateTree(tree_pairs) {
                             }
                             var posY = gradient * nodeX + c
                             if (nodeY >= posY) {
-                                if (configuration[nodeId] == 1) {
-                                    changeFeedback(`You cannot have nodes both above and below a line, you drew a line both above and below '${nodeId}'.`)
-                                    validCheck = false
-                                } else {
-                                    configuration[nodeId] = -1
-                                }
-                                
+                                configuration[nodeId] = -1
                             } else {
-                                if (configuration[nodeId] == -1) {
-                                    changeFeedback(`You cannot have nodes both above and below a line, you drew a line both above and below '${nodeId}'.`)
-                                    validCheck = false
-                                } else {
-                                    configuration[nodeId] = 1
-                                }
-                                
+                                configuration[nodeId] = 1
                             }
                         } 
                     } else if (nodeX <= x1) {
@@ -625,21 +605,9 @@ function generateTree(tree_pairs) {
                         }
                         var posY = gradient * nodeX + c
                         if (nodeY >= posY) {
-                            if (configuration[nodeId] == 1) {
-                                validCheck = false
-                                changeFeedback(`You cannot have nodes both above and below a line, you drew a line both above and below '${nodeId}'.`)
-                            } else {
-                                configuration[nodeId] = -1
-                            }
-                            
+                            configuration[nodeId] = -1
                         } else {
-                            if (configuration[nodeId] == -1) {
-                                validCheck = false
-                            } else {
-                                changeFeedback(`You cannot have nodes both above and below a line, you drew a line both above and below '${nodeId}'.`)
-                                configuration[nodeId] = 1
-                            }
-                            
+                            configuration[nodeId] = 1
                         }
                     }
                     
@@ -676,16 +644,14 @@ function generateTree(tree_pairs) {
                         d3.select(lines[i]).attr('class', 'lineGreyed').attr('stroke', function() { return color(configurations.length)})
                     }
                     configurations.push(configuration)
-                    
                     checkAnswer()
-                    
                 }
                 
             } else if (nodes_crossed.size !== litNodes.length) {
                 var nodes_missed = []
                 for (var k = 0; k < litNodes.length; k++) {
                     if (!nodes_crossed.has(litNodes[k])) {
-                        nodes_missed.push(litNodes[k].childNodes[1].textContent)
+                        nodes_missed.push(litNodes[k].id)
                     }
                 }
                 changeFeedback(`You must draw the line above or below every node, you are missing nodes: [${nodes_missed}].`)
@@ -694,16 +660,13 @@ function generateTree(tree_pairs) {
                 }
             }
              else {
-                 var new_wrong = []
-                for (var k = 0; k < wrong.length; k++) {
-                    new_wrong.push(document.getElementById(wrong[k]).childNodes[1].textContent)
-                }
-                changeFeedback(`There are conflicting literals, you have the literals [${new_wrong}] with their negations on the same side of the line.`)
+                changeFeedback(`There are conflicting literals, you have the literals [${wrong}] with their negations on the same side of the line.`)
                 for (var i = 0; i < lines.length; i++) {
                     d3.select(lines[i]).remove()
                 }
             }
         } else {
+            console.log('Double Back')
             for (var i = 0; i < lines.length; i++) {
                 d3.select(lines[i]).remove()
             }
@@ -713,6 +676,8 @@ function generateTree(tree_pairs) {
 
     function evaluateConfig(config, litNodes, wrong) {
         var lits = Object.keys(config)
+        console.log(lits)
+        console.log(litNodes)
         if (lits.length == litNodes.length) {
             // Validate Configuration
             var evalCheck = true
@@ -748,8 +713,7 @@ function generateTree(tree_pairs) {
         }
         if (total == configurations.length) {
             changeFeedback('All cuts complete, congrats!')
-            document.getElementById('graph').style="min-height: 300px; border: solid 3px green; width: 100%; text-align:left"
-            completedCuts = true
+            document.getElementById('userFeedbackTable').style="min-height: 300px; border: solid 1px green; width: 100%; text-align:left"
         }
     }
 
@@ -770,8 +734,8 @@ function generateTree(tree_pairs) {
 
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(5).strength(0.45))
-        .force("charge", d3.forceManyBody().strength(-700))
+        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(5).strength(0.25))
+        .force("charge", d3.forceManyBody().strength(-850))
         .force('y', d3.forceY().y(function(d) {
             return height/2
         }).strength(0.015))
@@ -783,12 +747,6 @@ function generateTree(tree_pairs) {
     .append("line")
     .attr("class", "link")
     .attr('marker-end','url(#arrowhead)')
-    .on('mouseover', function(d) {
-        canMakeLine = false
-    })
-    .on('mouseout', function() {
-        canMakeLine = true
-    })
 
     node = svg.selectAll(".node")
         .data(nodes)
@@ -801,16 +759,11 @@ function generateTree(tree_pairs) {
                 return "node unstuck"
             }
         }).attr('id', function(d) {
-            if (d.id.includes('-')) {
-                return cycleIdentifier(d.id)
+            if (d.id.length > 1) {
+                return 'not' + d.id[d.id.length - 1]
             } else {
-                if (d.id.startsWith('!')) {
-                    return 'not' + d.id.substring(1, d.id.length)
-                } else {
-                    return d.id
-                }
+                return d.id
             }
-
         })
         .call(d3.drag()
                 .on("start", dragstarted)
@@ -862,27 +815,6 @@ function generateTree(tree_pairs) {
             d.fy = d.y
         }
     })
-
-    
-    function cycleIdentifier(cycle) {
-        var cycle_literals = cycle.split('-')
-        var identifier = 0
-        for (var i = 0; i < cycle_literals.length; i++) {
-            if (cycle_literals[i].startsWith('!')) {
-                var temp_lit = cycle_literals[i].substring(1, cycle_literals[i].length)
-                identifier += temp_lit.charCodeAt(0)
-            } else {
-                identifier += cycle_literals[i].charCodeAt(0)
-            }
-        }
-        if (cycles_seen.includes(identifier)) {
-            console.log(`Found a notted cycle, its identifier is: '${identifier}'`)
-            return 'not' + identifier.toString()
-        } else {
-            cycles_seen.push(identifier)
-            return identifier.toString()
-        }
-    }
     
     function ticked() {
         link
@@ -992,7 +924,7 @@ function generateTree(tree_pairs) {
 
     function generate() {
         removeAll()
-        var imp_list = get_literals()
+        // var imp_list = get_literals()
         console.log("Generate Table")
         var table = alter_table(produce_truth_table(countLiterals(imp_list)), imp_list)
         var container = document.getElementById("truthtable")
@@ -1099,20 +1031,20 @@ function generateTree(tree_pairs) {
     }
 
     generate()
-    // document.getElementById("evaluateTreeButton").addEventListener("click", function() {
-    //     evaluateGraph()
-    //     if (document.querySelector('.activated')) {
-    //         if (document.querySelector('.activated').nextElementSibling.textContent == 'T') {
-    //             document.querySelector('.activated').className = 'table-entry correct'
-    //         } else {
-    //             document.querySelector('.activated').className = 'table-entry false'
-    //         }
-    //     }
-    // })
+    document.getElementById("evaluateTreeButton").addEventListener("click", function() {
+        evaluateGraph()
+        if (document.querySelector('.activated')) {
+            if (document.querySelector('.activated').nextElementSibling.textContent == 'T') {
+                document.querySelector('.activated').className = 'table-entry correct'
+            } else {
+                document.querySelector('.activated').className = 'table-entry false'
+            }
+        }
+    })
 
-    // document.getElementById('physics').addEventListener('change', function() {
-    //     checkPhysics()
-    // })
+    document.getElementById('physics').addEventListener('change', function() {
+        checkPhysics()
+    })
 
     document.getElementById('totalButton').addEventListener('click', function() {
         totalEvaluations()
@@ -1120,32 +1052,32 @@ function generateTree(tree_pairs) {
 
     // Section where we append all of the user toggles used to change the state of each of the literals
     // var lit_list = countLiterals(get_literals())
-    // var lit_list = countLiterals(imp_list)
-    // var cont = document.getElementById('userInputTable')
-    // for (var i = 0; i < lit_list.length; i++) {
-    //     var inp = document.createElement('span')
-    //     var lit = document.createElement('span')
-    //     lit.className = 'user-input-table py-1 px-3 ml-3'
-    //     lit.textContent = lit_list[i]
-    //     inp.appendChild(lit)
-    //     var brE = document.createElement('br')
-    //     var label = document.createElement('label')
-    //     label.className = 'switch ml-3'
-    //     var inp_two = document.createElement('input')
-    //     inp_two.type = 'checkbox'
-    //     inp_two.id = lit_list[i] + 'Toggle'
-    //     inp_two.addEventListener('click', function() {
-    //         changeInput()
-    //     })
-    //     inp_two.className = "lit_toggle"
-    //     var span = document.createElement('span')
-    //     span.className = 'slider-lit round'
-    //     label.appendChild(inp_two)
-    //     label.appendChild(span)
-    //     inp.appendChild(label)
-    //     cont.appendChild(inp)
-    //     cont.appendChild(brE)
-    // }
+    var lit_list = countLiterals(imp_list)
+    var cont = document.getElementById('userInputTable')
+    for (var i = 0; i < lit_list.length; i++) {
+        var inp = document.createElement('span')
+        var lit = document.createElement('span')
+        lit.className = 'user-input-table py-1 px-3 ml-3'
+        lit.textContent = lit_list[i]
+        inp.appendChild(lit)
+        var brE = document.createElement('br')
+        var label = document.createElement('label')
+        label.className = 'switch ml-3'
+        var inp_two = document.createElement('input')
+        inp_two.type = 'checkbox'
+        inp_two.id = lit_list[i] + 'Toggle'
+        inp_two.addEventListener('click', function() {
+            changeInput()
+        })
+        inp_two.className = "lit_toggle"
+        var span = document.createElement('span')
+        span.className = 'slider-lit round'
+        label.appendChild(inp_two)
+        label.appendChild(span)
+        inp.appendChild(label)
+        cont.appendChild(inp)
+        cont.appendChild(brE)
+    }
 
 
     function changeInput() {
@@ -1213,27 +1145,8 @@ function generateTree(tree_pairs) {
         
     }
 
-    document.getElementById('unstickAllButton').addEventListener('click', function() {
-        unstickAll()
-    })
 
-    function unstickAll() {
-        d3.selectAll('.node').each(function(d) {
-            if (!(d.id === 'T' || d.id === 'F')) {
-                d3.select(this).classed("stuck", d3.select(this).classed("stuck") ? false : false)
-                d3.select(this).classed("unstuck", d3.select(this).classed("unstuck") ? true : true)
-                unstickNode(d)
-            }
-        })
-    }
-
-    function unstickNode(d) {
-        if (d.fx) {
-            d.fx = null
-        }
-    }
-
-    // document.getElementById('physics').checked = false
+    document.getElementById('physics').checked = false
     simulation.alphaTarget(0.3).restart()
 }
 
@@ -1242,17 +1155,10 @@ function get_literals() {
     var inputs = document.querySelectorAll('.litInput')
     var imp_list = []
     for (var i = 0; i < inputs.length; i++) {
-        if (!inputs[i].value.includes('->')) {
-            changeFeedback("Please make sure '->' does not contain spaces between the characters.")
-        }
         var temp_list = inputs[i].value.trim().split("->")
-        if (temp_list.includes('-')) {
-            changeFeedback("Please do not include '-' besides in representing the arrow.")
-            return []
-        }
         var corrected = []
         if (temp_list.length > 2) {
-            changeFeedback("Please don't place more than 1 implication per input.")
+            alert("Please don't place more than 1 implication per input")
             return []
         } else {
             temp_list_2 = temp_list[0].split(' ').concat(temp_list[1].split(' '))
@@ -1264,7 +1170,7 @@ function get_literals() {
             }
         }
         if (temp_list.length > 2) {
-            changeFeedback('Please only have two literals per input.')
+            alert('Please only have two literals per input')
             return []
         }
         for (var n = 0; n < temp_list.length; n++) {
@@ -1273,10 +1179,10 @@ function get_literals() {
             }
         }
         if (corrected.includes('T')){
-            changeFeedback('Please do not use the literal T, consider using lowercase.')
+            alert('Please do not use the literal T')
             return []
         } else if (corrected.includes('F')) {
-            changeFeedback('Please do not use the literal F, consider using lowercase.')
+            alert('Please do not use the literal F')
             return []
         } else {
             imp_list.push([corrected[0], corrected[corrected.length - 1]])
@@ -1291,48 +1197,6 @@ function checkInputs() {
     console.log(document.querySelectorAll('.litInput'))
     return true
 }
-
-// Set the state and enable the button
-var treeState = 0
-document.querySelector('.noRemove').addEventListener('keydown', function() {
-    document.getElementById('generateTreeButton').disabled = false
-})
-
-
-document.getElementById("generateTreeButton").addEventListener("click", function() {
-    if (treeState == 1) {
-        // generateTree(produce_valid_trees(combine_tree_pairs(new_join_nodes(create_nodes(get_literals())))))
-        // document.getElementById("right-side").style = "display: block"
-        // document.getElementById("answers").style = "display: block"
-    } else if (treeState == 0) {
-        checkInputs()
-        if (checkInputs()) {
-            userTree(d3, saveAs, Blob, undefined)
-            changeFeedback('Now you can begin drawing. CONTROLS: Use SHIFT + Left mouse click to create nodes. Nodes can be dragged with the mouse. Press on nodes or links and delete with DEL. Press and hold SHIFT when dragging a node to create a link. Edit node labels by holding SHIFT when clicked.')
-            treeState = 1
-            var litInputs = document.querySelectorAll('.litInput')
-            for (var i = 0; i < litInputs.length; i++) {
-                litInputs[i].disabled = true
-            }
-            document.getElementById('generateTreeButton').textContent = 'Verify Tree'
-            document.getElementById('userMode').textContent = 'Draw Tree'
-        }
-    } else {
-
-    }
-    
-})
-
-// Controls button
-document.getElementById('controlsButton').addEventListener('click', function() {
-    if (treeState == 1) {
-        changeFeedback('CONTROLS: Use SHIFT + Left mouse click to create nodes. Nodes can be dragged with the mouse. Press on nodes or links and delete with DEL. Press and hold SHIFT when dragging a node to create a link. Edit node labels by holding SHIFT when clicked.')
-    } else if (treeState == 0) {
-        changeFeedback('Input a list of implications using the text boxes above, if you are unsure or lost, please practice using the exercises to get accustomed to the tool.')
-    } else if (treeState == 2) {
-        changeFeedback('CONTROLS: Begin cuts by pressing anywhere on screen. Change the direction of cuts by pressing the mouse again. Press SPACE to evaluate or delete the current cut. Nodes can be stuck in place by pressing on them, stuck nodes can be moved in the x direction.')
-    }
-})
 
 
 
@@ -1351,7 +1215,7 @@ document.getElementById('controlsButton').addEventListener('click', function() {
 
 // User Tree
 
-function userTree(d3, saveAs, Blob, undefined){
+document.onload = (function(d3, saveAs, Blob, undefined){
     "use strict";
   
     // TODO add user settings
@@ -1631,7 +1495,7 @@ function userTree(d3, saveAs, Blob, undefined){
             .data([d])
             .enter()
             .append("foreignObject")
-            .attr("x", nodeBCR.left )
+            .attr("x", nodeBCR.left - 2.8*placePad)
             .attr("y", nodeBCR.top - 230 - curScale)
             .attr("height", 2*useHW)
             .attr("width", useHW)
@@ -1917,7 +1781,7 @@ function userTree(d3, saveAs, Blob, undefined){
     var graph = new GraphCreator(svg, nodes, edges);
         graph.setIdCt(2);
     graph.updateGraph();
-  }(window.d3, window.saveAs, window.Blob);
+  }(window.d3, window.saveAs, window.Blob))
 
 
 var imp_list = []
@@ -1928,7 +1792,7 @@ function evaluation(graph) {
         // How to get the title of each node
         var nodeTitles = d3.select('svg').selectAll('text')[0]
         for (var i = 0; i < nodeTitles.length; i++) {
-        literals.push(nodeTitles[i].textContent)
+            literals.push(nodeTitles[i].textContent)
         }
 
         var nodePaths = graph.edges
@@ -1941,34 +1805,14 @@ function evaluation(graph) {
         if (isUserTreeValid(produceUserTree(imp_list, literals), combine_tree_pairs(new_join_nodes(create_nodes(get_literals()))))) {
             while(document.getElementById('graph').firstChild) {
                 document.getElementById('graph').removeChild(document.getElementById('graph').firstChild)
-            }
-
-            document.getElementById('userMode').textContent = 'Cut Tree'
-            
-            
-            
-            
-            var script = document.createElement('script');
-            script.onload = function () {          
+            }     
                 
-            changeFeedback('Tree is correct! ')
-            generateTree([changeTreeForCycles(produceUserTree(imp_list, literals))])
-            // document.getElementById("right-side").style = "display: block"
-            document.getElementById("answers").style = "display: block"
-            appendFeedback('CONTROLS: Begin cuts by pressing anywhere on screen. Change the direction of cuts by pressing the mouse again. Press SPACE to evaluate or delete the current cut. Nodes can be stuck in place by pressing on them, stuck nodes can be moved in the x direction.')
-            document.getElementById('generateTreeButton').style = 'display:none'
-            document.getElementById('totalButton').style = 'display:block'
+            changeFeedback('Tree is correct! Continue onto next exercise.')
+            setCookie('exercise3', '1', 7)
+            
 
-              
-            };
-    
-            script.src = "https://d3js.org/d3.v4.min.js"
-            document.head.appendChild(script);
-            treeState = 2
-            document.getElementById('additionalRow').style = 'display: block'
         } else {
             console.log('INCORRECT!!!')
-            console.log(produceUserTree(imp_list, literals))
             imp_list = []
             literals = []
         }
@@ -2008,7 +1852,7 @@ function checkCycles(tree) {
                 try {
                     if (virtual_tree[child_nodes[n][child_nodes[n].length - 1]].children.length > 0) {
                         var temp_branch = child_nodes[n]
-                        child_nodes.splice(n, 1)
+                        child_nodes.splice(n, n + 1)
                         for (var j = 0; j < virtual_tree[temp_branch[temp_branch.length - 1]].children.length; j++) {
                             var temp_temp_branch = temp_branch.slice()
                             temp_temp_branch.push(virtual_tree[temp_branch[temp_branch.length - 1]].children[j])
@@ -2016,10 +1860,10 @@ function checkCycles(tree) {
                         }
                         
                     } else {
-                        child_nodes.splice(n, 1)
+                        child_nodes.splice(n, n + 1)
                     }
                 } catch {
-                    child_nodes.splice(n, 1)
+                    child_nodes.splice(n, n + 1)
                 }
                 
             }
@@ -2057,7 +1901,7 @@ function changeTreeForCycles(tree) {
             console.log(tree[i].nood)
             if (cycle.includes(tree[i].nood)) {
                 console.log(`Removing node: ${tree[i].nood}`)
-                tree.splice(i, 1)
+                tree.splice(i, i+1)
                 i--
             } else {
                 virtual_tree = createDictTree(tree)
@@ -2065,7 +1909,7 @@ function changeTreeForCycles(tree) {
                 var occur = false
                 for (var n = 0; n < temp_node.children.length; n++) {
                     if (cycle.includes(temp_node.children[n])) {
-                        temp_node.children.splice(n, 1)
+                        temp_node.children.splice(n, n+1)
                         console.log(`Removing child: ${temp_node.children[n]} from node: ${tree[i].nood}`)
                         n--
                         occur = true
@@ -2078,7 +1922,7 @@ function changeTreeForCycles(tree) {
                 for (var n = 0; n < temp_node.parents.length; n++) {
                     if (cycle.includes(temp_node.parents[n])) {
                         console.log(`Removing parent: ${temp_node.parents[n]} from node: ${tree[i].nood}`)
-                        temp_node.parents.splice(n, 1)
+                        temp_node.parents.splice(n, n+1)
                         n--
                         occur = true
                     }
@@ -2142,6 +1986,7 @@ function hasDuplicates(array) {
 
 // This function needs to be editted for further user feedback!!!
 function isUserTreeValid(tree, combined_trees) {
+    combined_trees = [[combined_trees[0][0]]]
     
     var all_lits = countLiterals(get_literals())
     for (var i = 0; i < tree.length; i++) {
@@ -2487,3 +2332,13 @@ function isEqual(value, other) {
 	return true;
 
 }; 
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}

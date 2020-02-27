@@ -7,13 +7,13 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <title>Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Arrow Rule Mastery</title>
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Hub</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" style="border-bottom:solid 1px;">
+      <a class="navbar-brand" href="#">Home</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -24,36 +24,39 @@
             <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="tool.html">Tool</a>
+            <a class="nav-link" href="creator.html">Sandbox</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="creator.html">Creator</a>
+            <a class="nav-link" href="exercise-hub.html">Exercises</a>
           </li>
         </ul>
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container" style="box-shadow: 0 30px 40px rgba(0,0,0,.1);">
       <div class="row">
         <div class="col">
-          <h1 class="display-4 my-2">Online tool for Computation and Logic<br>Arrow Rule Mastery</h1>
-          <p class="lead">
-            This webapp was created to aid first year students in learning how many valid evaluations a conjunction of implications there are.<br>
-            Learn About:</p>
-            <section class="my-2">
-              <button class="btn btn-info">Implications</button>
-              <button class="btn btn-info">Conjunctions</button>
-              <button class="btn btn-info">The Arrow Rule</button>
-            </section>
-            <section class="my-5 jumbotron">
-              <br>
-              <button class="btn btn-secondary float-left">Back</button>
-              <button class="btn btn-secondary float-right">Next</button>
-            </section>
-            <section class="my-3">
-              <a href="#" class="btn btn-primary">Tutorial</a>
-              <a href="#" class="btn btn-primary">Tool</a>
-            </section>
+          <h1 class="display-4 my-3">Online tool for Computation and Logic:<br>Arrow Rule Mastery</h1>
+          <hr class="my-2">
+          <section class="mt-3">
+            <p class="fl">
+              This webapp was created to aid budding computer science students with the conceptual topic of <q>Implication Graphs</q>, 
+              it is primarily tailored for first year students studying at the Univerity of Edinburgh and taking the course <q>Introduction to Computation</q>.<br><br>
+              <strong style="font-size: 25px;">Assumption:</strong><br>
+              A basic working knowledge of core propositional logic terminology is assumed. The user should at least be familiar with <q>Conjunctions</q>, 
+              <q>Implications</q> and <q>Negations</q> in order to use the tool correctly. If you are unsure of any of these topics I would recommend wikipedia for
+              specific resources or <a href="https://www.iep.utm.edu/prop-log/">this paper</a>.<br><br>
+              <strong style="font-size: 25px;">Features:</strong><br>
+              The tool features a set of <a href="exercise-hub.html">exercises</a> designed to first get the user accustomed to using the tool, and further <a href="exercise-hub.html">exercises</a> to test and expand the knowledge
+              of the user. The exercises are in a progressive order, with each expanding on the previous.<br>
+              The tool also features a <a href="creator.html">sandbox mode</a> where you can enter implications of your own. This feature is intended for practice and answer checking, there is 
+              an in-built feedback feature which will suggest actions based on the current state in order to progress to the next state.<br><br>
+              <strong style="font-size: 25px;">Bugs/Feedback:</strong><br>
+              If any bugs or incorrect behaviour occurs, or you simply want to give feedback on the tool, please email me with details at s1658030@sms.ed.ac.uk<br><br>
+              <strong style="font-size: 25px;">Further Info:</strong><br>
+              This web page uses cookies in order to save user progress on the exercises, no further information is gathered from the user.
+            </p>
+          </section>
         </div>
       </div>
     </div>

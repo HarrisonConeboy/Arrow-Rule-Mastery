@@ -6,7 +6,6 @@
 
 #graph {
     border: black 2px solid;
-    height: 700px;
 }
 
 .table-entry, .table-title {
@@ -32,7 +31,7 @@
 
 .scroll {
     max-height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
 
 }
 
@@ -99,7 +98,7 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: green;
     -webkit-transition: .4s;
     transition: .4s;
   }
@@ -188,3 +187,68 @@ html {
   #graphContainer {
     border: black 2px solid;
   }
+
+  .lineCut {
+    stroke: steelblue;
+    stroke-width: 2px;
+    stroke-linecap: round;
+}
+
+.lineGreyed {
+  stroke-width: 2px;
+  stroke-linecap: round;
+  opacity: 0.66;
+}
+
+.complete {
+  border: green 2px solid;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+
+svg .rect {
+  fill: gold;
+  stroke: steelblue;
+  stroke-width: 5px;
+}
+
+#userFeedbackTable {
+  min-height: 300px;
+  border: solid 1px black;
+  width: 100%;
+}
+
+#answers {
+  max-height: 300px;
+  overflow: auto;
+  border: solid 1px;
+}
+
+.exercise {
+  border-bottom: solid 1px black;
+  border-radius: 2.5%;
+}
+
+#userFeedbackTableEx1 {
+  min-height: 150px;
+  border: solid 1px black;
+  width: 100%;
+}
+
+.fl {
+  font-size: 23px;
+  font-weight: 300;
+}

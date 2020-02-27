@@ -25,7 +25,7 @@
 
     <!-- Nav Menu -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-4" id="light-colour" style="border-bottom:solid 1px;">
-      <a class="navbar-brand" href="#">Sandbox</a>
+      <a class="navbar-brand" href="exercise-hub.html">Exercises</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -45,52 +45,34 @@
       </div>
     </nav>
 
-
-    <div class="container-fluid">
+    <a class="btn btn-light" href="exercise-hub.html" style="position:fixed; top: 80px;">Back</a>
+    <div class="container">
       <div class="row">
         <div class="col">
-          <br>
-          <button id="resetButton" class="btn float-right">Reset</button>
-          <h1 class="display-4 mt-3"><span class="display-4 m-3">Sandbox Mode: <strong id="userMode">Input Implications</strong></span><br><span class="lead m-3">Here you can practice creating any implication graph</span></h1>
-          
+          <h1 class="display-4 mt-3"><span class="display-4 m-3">Tutorial 2: Entering Implications</span><br><span class="lead m-3">This exercise is for learning how to enter a conjunction of implications with negations into the tool.</span></h1>
         </div>
-        
+      </div>
+      <div class="row">
+        <div class="col jumbotron">
+          <h1 style="text-align: left;">Instructions:</h1>
+          <p style="text-align:left">Just simply enter this logical formula into the text boxes below: <code style="font-size: 22px;">(A->B)&and;(¬B->C)&and;(¬A->¬D)</code><br>
+          <ul>
+            <li>The <q>&and;</q> symbol can be denoted by appending another input box</li>
+            <li>Append new text boxes with <q>ENTER</q></li>
+            <li>Do not include any parenthesis <q>()</q></li>
+            <li>Only type one literal on each side of the <q>-></q></li>
+            <li>Delete unwanted text boxes with <q>DEL</q></li>
+            <li>Negations <q>¬</q> can be represented with <q>!</q></li>
+          </ul>
+            </p>
+        </div>
       </div>
 
-      <div class="row">
+      <div class="row mx-3">
         <!-- First 8 columns containing graph -->
-        <div class="col-8">
-          <div class="row">
-            <div class="col">
-              <div id="graph"></div>
-              <div id="toolbox"></div>
-              <br>
-            </div>
-            
-          </div>
-          
-          <div class="row" id="additionalRow" style="display: none;" class="my-2">
-            <div class="col">
-              <div class="row">
-                <div class="col">
-                  <p class="lead my-2" style="text-align: left;">Additional Controls:</p>
-                </div>
-                
-              </div>
-              <div class="row">
-                <div class="col">
-                  <!-- <button id="evaluateTreeButton" class="btn btn-info showCuts m-1">Evaluate Configuration</button><br> -->
-                  <button id="unstickAllButton" class="btn btn-info m-1">Unstick All</button>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-        
 
         <!-- User input area or exercise display area -->
-        <div class="col-4">
+        <div class="col">
           <div class="row">
               <span class="lead" style="font-size: 25px; text-align: left;">Implication List:</span>
           </div>
@@ -110,44 +92,35 @@
             <br> 
           </div>
           <div class="row">
-            <button id="generateTreeButton" class="btn btn-primary float-left" disabled>Begin Drawing</button>
-            
-            
+            <button id="generateTreeButton" class="btn btn-primary float-left">Check Answer</button>
           </div>
-          <hr style="border: solid 1px black; width: 100%;">
-          <div class="row my-1">
-            <div class="col">
-              <p class="lead" style="font-size: 25px; text-align: left;">Feedback: <button id="controlsButton" class="btn btn-md btn-dark float-right">Controls</button></p> 
 
+
+          
+
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <p class="lead" style="text-align: left; font-size: 25px;">Feedback:</p>
+            <div id="userFeedbackTableEx1">
+              <p class="lead p-2" id="userFeed" style="font-size: 20px; text-align: left;"></p>
             </div>
-          </div>
-          <div class="row m-2">
-            <p id="userFeedbackTable" style="text-align: left; font-size: 23px;" class="lead p-3">Enter a conjunction of implications using the text inputs, then press 'Begin Drawing' to draw the tree.</p>
-          </div>
-          <hr style="border: solid 1px black; width: 100%;">
-          <div class="row">
-            <div class="col">
-              <button id="totalButton" class="btn btn-success m-1" style="display: none;">Show All Cuts/All Answers</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" id="answers" style="display: none;">
-              <div>Total: <span id="total-evaluations"></span></div>
-              <div>Valid Configurations:</div>
-              <div id="valid-states"></div>
-            </div>
-            <div class="col" style="display:none;">
-              <div id="tableTitle"></div>
-              <div id="truthtable" class="scrollable"></div>
-            </div>
+            
           </div>
         </div>
       </div>
-    </div>
-      
+      <hr style="border: solid 1px black; width: 100%;">
 
-    
-    
+    </div>
+
+    <div class="row mb-2">
+      <div class="col mx-3">
+        <a href="exercise1.html" class="btn btn-dark float-left">Previous Exercise</a>
+        <a href="exercise3.html" class="btn btn-dark float-right">Next Exercise</a>
+      </div>
+    </div>
+
 
 
     <!-- Begin Javascript for Bootstrap -->
@@ -156,7 +129,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <!-- My Custom JavaScript -->
-    <script type="text/javascript" src="tree.js"></script>
+    <script type="text/javascript" src="tree-ex2.js"></script>
     <script src="//cdn.jsdelivr.net/filesaver.js/0.1/FileSaver.min.js"></script>
 
 
@@ -201,6 +174,7 @@
           e.preventDefault();
           }
       });
+
     </script>
 
   </body>

@@ -380,6 +380,7 @@ function create_links(tree) {
 
 
 function produceUserTree(imp_list, lit_list) {
+    console.log('producing tree')
     var tree = {}
     for (var i = 0; i < lit_list.length; i++) {
         tree[lit_list[i]] = {
@@ -424,17 +425,11 @@ function generateTree(tree_pairs) {
     var completedCuts = false
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-    var validStates = document.getElementById('valid-states')
-    while (validStates.firstChild) {
-        validStates.removeChild(validStates.firstChild)
-    }
-
     // var userInput = document.getElementById('userInputTable')
     // while (userInput.firstChild) {
     //     userInput.removeChild(userInput.firstChild)
     // }
 
-    document.getElementById('total-evaluations').textContent = ''
 
     var width = window.innerWidth/12 * 9.5,
         height = 550
@@ -676,7 +671,7 @@ function generateTree(tree_pairs) {
                         d3.select(lines[i]).attr('class', 'lineGreyed').attr('stroke', function() { return color(configurations.length)})
                     }
                     configurations.push(configuration)
-                    
+                    changeFeedback('Valid cut performed!')
                     checkAnswer()
                     
                 }
@@ -1099,119 +1094,6 @@ function generateTree(tree_pairs) {
     }
 
     generate()
-    // document.getElementById("evaluateTreeButton").addEventListener("click", function() {
-    //     evaluateGraph()
-    //     if (document.querySelector('.activated')) {
-    //         if (document.querySelector('.activated').nextElementSibling.textContent == 'T') {
-    //             document.querySelector('.activated').className = 'table-entry correct'
-    //         } else {
-    //             document.querySelector('.activated').className = 'table-entry false'
-    //         }
-    //     }
-    // })
-
-    // document.getElementById('physics').addEventListener('change', function() {
-    //     checkPhysics()
-    // })
-
-    document.getElementById('totalButton').addEventListener('click', function() {
-        totalEvaluations()
-    })
-
-    // Section where we append all of the user toggles used to change the state of each of the literals
-    // var lit_list = countLiterals(get_literals())
-    // var lit_list = countLiterals(imp_list)
-    // var cont = document.getElementById('userInputTable')
-    // for (var i = 0; i < lit_list.length; i++) {
-    //     var inp = document.createElement('span')
-    //     var lit = document.createElement('span')
-    //     lit.className = 'user-input-table py-1 px-3 ml-3'
-    //     lit.textContent = lit_list[i]
-    //     inp.appendChild(lit)
-    //     var brE = document.createElement('br')
-    //     var label = document.createElement('label')
-    //     label.className = 'switch ml-3'
-    //     var inp_two = document.createElement('input')
-    //     inp_two.type = 'checkbox'
-    //     inp_two.id = lit_list[i] + 'Toggle'
-    //     inp_two.addEventListener('click', function() {
-    //         changeInput()
-    //     })
-    //     inp_two.className = "lit_toggle"
-    //     var span = document.createElement('span')
-    //     span.className = 'slider-lit round'
-    //     label.appendChild(inp_two)
-    //     label.appendChild(span)
-    //     inp.appendChild(label)
-    //     cont.appendChild(inp)
-    //     cont.appendChild(brE)
-    // }
-
-
-    function changeInput() {
-        var lit_sliders = document.querySelectorAll('.lit_toggle')
-            var lit_inputs = []
-            var lits = []
-            for (var i = 0; i < lit_sliders.length; i++) {
-                var id_length = lit_sliders[i].id.length - 6
-                lits.push(lit_sliders[i].id.substring(0, id_length))
-                if (lit_sliders[i].checked) {
-                    lit_inputs.push('1')
-                } else {
-                    lit_inputs.push('0')
-                } 
-            }
-
-        for (var i = 0; i < lits.length; i++) {
-            var node = d3.select('#' + lits[i])
-            var not_node = d3.select('#not' + lits[i])
-            if (lit_inputs[i] === '1') {
-                node.each(function(d) { 
-                    d.category = 1
-                })
-                if (not_node) {
-                    not_node.each(function(d) { 
-                        d.category = 2
-                        
-                    })
-                }
-            } 
-            else {
-                node.each(function(d) { 
-                    d.category = 2
-                })
-                if (not_node) {
-                    not_node.each(function(d) { 
-                        d.category = 1
-                    })
-                }
-            }
-        } 
-
-        link.style('stroke', 'black')
-        d3.selectAll('circle').style('fill', function(d) {
-            if (d.id === 'T') {
-                return 'lightgreen'
-            } else if (d.id === 'F') {
-                return 'red'
-            } else {
-                if (d.category === 1) {
-                    return 'lightgreen'
-                } else {
-                    return 'red'
-                }
-            }
-        })
-
-        // This used to move the selected nodes when the toggle inputs were pressed
-        if (document.getElementById('physics').checked) {
-            simulation.force('y', d3.forceY().y(function(d) {
-                return yCenters[d.category]
-            }).strength(1))
-            simulation.force("y").initialize(nodes)
-        }
-        
-    }
 
     document.getElementById('unstickAllButton').addEventListener('click', function() {
         unstickAll()
@@ -1293,35 +1175,11 @@ function checkInputs() {
 }
 
 // Set the state and enable the button
-var treeState = 0
-document.querySelector('.noRemove').addEventListener('keydown', function() {
-    document.getElementById('generateTreeButton').disabled = false
-})
+var treeState = 1
 
+userTree(d3, saveAs, Blob, undefined)
+changeFeedback('Now you can begin drawing. CONTROLS: Use SHIFT + Left mouse click to create nodes. Nodes can be dragged with the mouse. Press on nodes or links and delete with DEL. Press and hold SHIFT when dragging a node to create a link. Edit node labels by holding SHIFT when clicked.')
 
-document.getElementById("generateTreeButton").addEventListener("click", function() {
-    if (treeState == 1) {
-        // generateTree(produce_valid_trees(combine_tree_pairs(new_join_nodes(create_nodes(get_literals())))))
-        // document.getElementById("right-side").style = "display: block"
-        // document.getElementById("answers").style = "display: block"
-    } else if (treeState == 0) {
-        checkInputs()
-        if (checkInputs()) {
-            userTree(d3, saveAs, Blob, undefined)
-            changeFeedback('Now you can begin drawing. CONTROLS: Use SHIFT + Left mouse click to create nodes. Nodes can be dragged with the mouse. Press on nodes or links and delete with DEL. Press and hold SHIFT when dragging a node to create a link. Edit node labels by holding SHIFT when clicked.')
-            treeState = 1
-            var litInputs = document.querySelectorAll('.litInput')
-            for (var i = 0; i < litInputs.length; i++) {
-                litInputs[i].disabled = true
-            }
-            document.getElementById('generateTreeButton').textContent = 'Verify Tree'
-            document.getElementById('userMode').textContent = 'Draw Tree'
-        }
-    } else {
-
-    }
-    
-})
 
 // Controls button
 document.getElementById('controlsButton').addEventListener('click', function() {
@@ -1632,7 +1490,7 @@ function userTree(d3, saveAs, Blob, undefined){
             .enter()
             .append("foreignObject")
             .attr("x", nodeBCR.left )
-            .attr("y", nodeBCR.top - 230 - curScale)
+            .attr("y", nodeBCR.top- 250 - curScale)
             .attr("height", 2*useHW)
             .attr("width", useHW)
             .append("xhtml:p")
@@ -1858,14 +1716,20 @@ function userTree(d3, saveAs, Blob, undefined){
       // remove old nodes
       thisGraph.circles.exit().remove();
 
-      document.getElementById('generateTreeButton').addEventListener('click', function() {
-        var graph = thisGraph
-        var imp_list = []
-        var literals = []
-        evaluation(graph)
-      })
+      if (!checkval) {
+        document.getElementById('generateTreeButton').addEventListener('click', function() {
 
-    };
+            var graph = thisGraph
+            var imp_list = []
+            var literals = []
+            evaluation(graph)
+            
+    
+          })
+    
+        };
+      }
+
   
     GraphCreator.prototype.zoomed = function(){
       this.state.justScaleTransGraph = true;
@@ -1922,56 +1786,51 @@ function userTree(d3, saveAs, Blob, undefined){
 
 var imp_list = []
 var literals = []
-
+var checkval = 0
 function evaluation(graph) {
+    checkval = 1
     try {
         // How to get the title of each node
         var nodeTitles = d3.select('svg').selectAll('text')[0]
         for (var i = 0; i < nodeTitles.length; i++) {
-        literals.push(nodeTitles[i].textContent)
+            literals.push(nodeTitles[i].textContent)
         }
 
         var nodePaths = graph.edges
         for (var i = 0; i < nodePaths.length; i++) {
-        imp_list.push([nodePaths[i].source.title, nodePaths[i].target.title])
+            imp_list.push([nodePaths[i].source.title, nodePaths[i].target.title])
         }
 
-        console.log('PVT')
-        console.log(combine_tree_pairs(new_join_nodes(create_nodes(get_literals()))))
-        if (isUserTreeValid(produceUserTree(imp_list, literals), combine_tree_pairs(new_join_nodes(create_nodes(get_literals()))))) {
-            while(document.getElementById('graph').firstChild) {
-                document.getElementById('graph').removeChild(document.getElementById('graph').firstChild)
-            }
-
-            document.getElementById('userMode').textContent = 'Cut Tree'
-            
-            
-            
-            
-            var script = document.createElement('script');
-            script.onload = function () {          
-                
-            changeFeedback('Tree is correct! ')
-            generateTree([changeTreeForCycles(produceUserTree(imp_list, literals))])
-            // document.getElementById("right-side").style = "display: block"
-            document.getElementById("answers").style = "display: block"
-            appendFeedback('CONTROLS: Begin cuts by pressing anywhere on screen. Change the direction of cuts by pressing the mouse again. Press SPACE to evaluate or delete the current cut. Nodes can be stuck in place by pressing on them, stuck nodes can be moved in the x direction.')
-            document.getElementById('generateTreeButton').style = 'display:none'
-            document.getElementById('totalButton').style = 'display:block'
-
-              
-            };
-    
-            script.src = "https://d3js.org/d3.v4.min.js"
-            document.head.appendChild(script);
+        var userTree = produceUserTree(imp_list, literals)
+        if (treeState !== 2) {
             treeState = 2
-            document.getElementById('additionalRow').style = 'display: block'
-        } else {
-            console.log('INCORRECT!!!')
-            console.log(produceUserTree(imp_list, literals))
-            imp_list = []
-            literals = []
+            if (isUserTreeValid(userTree, combine_tree_pairs(new_join_nodes(create_nodes(get_literals()))))) {
+                imp_list = []
+                literals = []
+                while(document.getElementById('graph').firstChild) {
+                    document.getElementById('graph').removeChild(document.getElementById('graph').firstChild)
+                }
+    
+                var script = document.createElement('script');
+                script.onload = function () {          
+                    changeFeedback('Tree is correct! ')
+                    generateTree([changeTreeForCycles(userTree)])
+                    appendFeedback('CONTROLS: Begin cuts by pressing anywhere on screen. Change the direction of cuts by pressing the mouse again. Press SPACE to evaluate or delete the current cut. Nodes can be stuck in place by pressing on them, stuck nodes can be moved in the x direction.')
+                    document.getElementById('generateTreeButton').style = 'display:none'
+                };
+        
+                script.src = "https://d3js.org/d3.v4.min.js"
+                document.head.appendChild(script);
+                document.getElementById('additionalRow').style = 'display: block'
+            } else {
+                console.log('INCORRECT!!!')
+                console.log(userTree)
+                imp_list = []
+                literals = []
+                treeState = 1
+            }
         }
+        
     }
     catch {
         console.log('Overrun')
@@ -1986,25 +1845,25 @@ function checkCycles(tree) {
     for (var i = 0; i < tree.length; i++) {
         var cyclic_lit = tree[i].nood
         var child_nodes = []
+
         for (var n = 0; n < tree[i].children.length; n++) {
             var temp_list = []
             temp_list.push(tree[i].children[n])
             child_nodes.push(temp_list)
         }
-        var counter = 0
         outer:
         while (child_nodes.length > 0) {
 
             for (var n = 0; n < child_nodes.length; n++) {
                 if (child_nodes[n][child_nodes[n].length - 1] == cyclic_lit) {
+                    console.log('Here is a cycle:')
+                    console.log(child_nodes[n])
                     return child_nodes[n]
                 }
 
                 if (hasDuplicates(child_nodes[n])) {
                     break outer
                 }
-                console.log('VIRTUAL TREE!!!')
-                console.log(virtual_tree)
                 try {
                     if (virtual_tree[child_nodes[n][child_nodes[n].length - 1]].children.length > 0) {
                         var temp_branch = child_nodes[n]
@@ -2053,6 +1912,8 @@ function changeTreeForCycles(tree) {
                 }
             }
         }
+        console.log(`Here are the nodes:`)
+        console.log(tree)
         for (var i = 0; i < tree.length; i++) {
             console.log(tree[i].nood)
             if (cycle.includes(tree[i].nood)) {
@@ -2066,8 +1927,8 @@ function changeTreeForCycles(tree) {
                 for (var n = 0; n < temp_node.children.length; n++) {
                     if (cycle.includes(temp_node.children[n])) {
                         temp_node.children.splice(n, 1)
+                        console.log(temp_node.children[n])
                         console.log(`Removing child: ${temp_node.children[n]} from node: ${tree[i].nood}`)
-                        n--
                         occur = true
                     }
                 }
@@ -2079,7 +1940,6 @@ function changeTreeForCycles(tree) {
                     if (cycle.includes(temp_node.parents[n])) {
                         console.log(`Removing parent: ${temp_node.parents[n]} from node: ${tree[i].nood}`)
                         temp_node.parents.splice(n, 1)
-                        n--
                         occur = true
                     }
                 }
@@ -2487,3 +2347,13 @@ function isEqual(value, other) {
 	return true;
 
 }; 
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
