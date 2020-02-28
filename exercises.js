@@ -1,27 +1,21 @@
 var cookies = document.cookie
-var exercise_list = ['exercise1', 'exercise2', 'exercise3', 'exercise4', 'exercise5', 'exercise6', 'exercise7', 'exercise8', 'exercise9', 'exercise10', 'exercise11', 'exercise12']
+var exercise_list = ['exercise1', 'exercise2', 'exercise3', 'exercise4', 'exercise5', 'exercise6', 'exercise7', 'exercise8', 'exercise9', 'exercise10', 'exercise11', 'exercise12', 'exercise13']
 if (cookies) {
     var states = document.querySelectorAll('.exercise-state')
     var exercises = document.querySelectorAll('.exercise')
     for (var i = 0; i < exercise_list.length; i++) {
         setExercise(exercise_list[i], states, i, exercises)
-        console.log(`Setting ${i}`)
     }
     
 } else {
     for (var i = 0; i < exercise_list.length; i++) {
         setCookie(exercise_list[i], '0', 7)
     }
-    
-    for (var i = 0; i < 5; i++) {
-        console.log(`Cookie for ${i} is: ${getCookie(exercise_list[i])}`)
-    }
     var states = document.querySelectorAll('.exercise-state')
     var exercises = document.querySelectorAll('.exercise')
     for (var i = 0; i < states.length; i++) {
         states[i].textContent = '/ Not Completed'
         exercises[i].style = 'background:white'
-        console.log(`Setting ${i} white`)
     }
 }
 
@@ -47,7 +41,6 @@ function getCookie(name) {
 
 function setExercise(exerciseStr, states, counter, exercises) {
     var exercise = getCookie(exerciseStr)
-    console.log(`Cookie ${counter} is ${exercise}`)
     if (exercise == '1') {
         states[counter].textContent = '/ Completed'
         exercises[counter].style = 'background:lightgreen'

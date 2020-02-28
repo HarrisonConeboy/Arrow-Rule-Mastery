@@ -252,3 +252,8 @@ svg .rect {
   font-size: 23px;
   font-weight: 300;
 }
+
+#dots:hover {
+  text-decoration: underline;
+  color: blue;
+}

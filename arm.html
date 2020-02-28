@@ -24,7 +24,7 @@
 
     <!-- Nav Menu -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-4" id="light-colour" style="border-bottom:solid 1px;">
-      <a class="navbar-brand" href="exercise-hub.html">Exercises</a>
+      <a class="navbar-brand" href="exercise-hub.html">ARM</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -44,11 +44,11 @@
       </div>
     </nav>
 
-    <a class="btn btn-light" href="exercise-hub.html" style="position:fixed; top: 80px; z-index: 50;">Back</a>
+    <a class="btn btn-light" href="exercise-hub.html" style="position:fixed; top: 80px; z-index: 50;">Exercises & Tutorials</a>
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1 class="display-4 mt-3"><span class="display-4 m-3">Exercise IV</span><br><span class="lead m-3">This is an exercise to help you practice and learn.</span></h1>
+          <h1 class="display-4 mt-3"><span class="display-4 m-3">Implication Graph Generator</span><br><span class="lead m-3">The exercise has been recreated using this tool, try to draw and cut the graph.</span></h1>
         </div>
       </div>
         <div class="row">
@@ -57,6 +57,22 @@
             <p style="text-align:left">Draw and cut the tree which represents the implications given below.<br>
               <i>Remember:</i> If you are unsure about the full controls, go back and practice with the tutorials.
             <ul>
+              <span class="lead" style="text-align: left;">Controls in draw mode:</span>
+              <li>Each literal is represented by a node, nodes are added to the canvas by pressing <q>SHIFT</q> and a mouse click.</li>
+              <li>Implications are represented by links between nodes, links are added by holding <q>SHIFT</q> and dragging between nodes.</li>
+              <span id="dots" onclick="readMore()" class="dots">...read more<br></span><span id="more" style="display:none">
+              <li>Links and nodes can be deleted by pressing on them, this highlights them pink and then pressing <q>DEL</q></li>
+              <li>You can rename nodes by holding <q>SHIFT</q> and clicking on them with the mouse.</li>
+              <li>Nodes can be dragged with the mouse.</li>
+              <li>The canvas can be dragged with the mouse.</li>
+              <li>Canvas supports zooming.</li>
+              <span class="lead" style="text-align: left;">Controls in cut mode:</span>
+              <li>Cuts are performed by pressing anywhere on the canvas below, dragging the mouse and then pressing <q>SPACE</q>.</li>
+              <li>To stop performing a cut, press <q>SPACE</q>.</li>
+              <li>Nodes can be <i>stuck</i> by clicking with the left mouse button/</li>
+              <li><i>Stuck</i> nodes can only be moved in the x axis.</li>
+              <li>Nodes can be moved by click and drag.</li>
+              <li>You must draw a cut above or below <strong>every</strong> node.</li></span>
               <span class="lead" style="text-align: left;">Objective:</span>
               <li>Draw the implication graph with nodes and links.</li>
               <li>Cut the graph produced, showing you the number of valid evaluations.</li>
@@ -140,13 +156,6 @@
         </div>
         <hr style="border: solid 1px black; width: 100%;">
       </div>
-
-      <div class="row mb-2">
-        <div class="col mx-3">
-          <a href="exercise12.html" class="btn btn-dark float-left">Previous Exercise</a>
-          <a href="exercise14.html" class="btn btn-dark float-right">Next Exercise</a>
-        </div>
-      </div>
     </div>
          
 
@@ -210,6 +219,13 @@
           }
       });
 
+      function readMore() {
+        var dots = document.getElementById("dots");
+        var moreText = document.getElementById("more");
+        dots.style = 'display: none'
+        moreText.style = 'display:inline'
+      }
+
       var queryString = window.location.search
       var urlParams = new URLSearchParams(queryString)
       var unparsed_implications = urlParams.get('implications')
@@ -221,7 +237,6 @@
 
         for (var i = 0; i < temp_list.length; i++) {
           if (temp_list[i] !== '') {
-            console.log(temp_list[i])
             var temp = temp_list[i].split(',')
             imp_list.push([temp[0], temp[1]])
           }
