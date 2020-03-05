@@ -1973,7 +1973,7 @@ function evaluation(graph) {
             literals = []
         }
     }
-    catch {
+    catch(e) {
         console.log('Overrun')
     }
   
@@ -2018,7 +2018,7 @@ function checkCycles(tree) {
                     } else {
                         child_nodes.splice(n, 1)
                     }
-                } catch {
+                } catch(e) {
                     child_nodes.splice(n, 1)
                 }
                 
