@@ -36,7 +36,7 @@ function countLiterals(imp_set) {
     }
     return uniqueLiterals
 }
-  
+
 function produce_truth_table(literals_list) {
     var length_down = 2 ** literals_list.length + 1
     var length_across = literals_list.length
@@ -1928,12 +1928,12 @@ function evaluation(graph) {
         // How to get the title of each node
         var nodeTitles = d3.select('svg').selectAll('text')[0]
         for (var i = 0; i < nodeTitles.length; i++) {
-        literals.push(nodeTitles[i].textContent)
+            literals.push(nodeTitles[i].textContent)
         }
 
         var nodePaths = graph.edges
         for (var i = 0; i < nodePaths.length; i++) {
-        imp_list.push([nodePaths[i].source.title, nodePaths[i].target.title])
+            imp_list.push([nodePaths[i].source.title, nodePaths[i].target.title])
         }
 
         console.log('PVT')
@@ -2099,39 +2099,40 @@ function changeTreeForCycles(tree) {
 
 
 function isReferenced(tree_one, tree_two) {
-    var crossover = list_literals(get_literals())
-    parents_children = []
-    for (var i = 0; i < tree_one.length; i++) {
-        for (var n = 0; n < tree_one[i].children.length; n++) {
-            parents_children.push(tree_one[i].children[n])
-        }
-        for (var n = 0; n < tree_one[i].parents.length; n++) {
-            parents_children.push(tree_one[i].parents[n])
-        }
-    }
-    var tree_one_nodes = []
-    for (var i = 0; i < tree_one.length; i++) {
-        tree_one_nodes.push(tree_one[i].nood)
-    }
-    var tree_two_nodes = []
-    for (var i = 0; i < tree_two.length; i++) {
-        tree_two_nodes.push(tree_two[i].nood)
-    }
+    // var crossover = list_literals(get_literals())
+    // parents_children = []
+    // for (var i = 0; i < tree_one.length; i++) {
+    //     for (var n = 0; n < tree_one[i].children.length; n++) {
+    //         parents_children.push(tree_one[i].children[n])
+    //     }
+    //     for (var n = 0; n < tree_one[i].parents.length; n++) {
+    //         parents_children.push(tree_one[i].parents[n])
+    //     }
+    // }
+    // var tree_one_nodes = []
+    // for (var i = 0; i < tree_one.length; i++) {
+    //     tree_one_nodes.push(tree_one[i].nood)
+    // }
+    // var tree_two_nodes = []
+    // for (var i = 0; i < tree_two.length; i++) {
+    //     tree_two_nodes.push(tree_two[i].nood)
+    // }
 
-    for (var i = 0; i < tree_two.length; i++) {
-        if (parents_children.includes(tree_two[i].nood)) {
-            return true
-        }
-    }
+    // for (var i = 0; i < tree_two.length; i++) {
+    //     if (parents_children.includes(tree_two[i].nood)) {
+    //         return true
+    //     }
+    // }
 
-    for (var i = 0; i < crossover.length; i++) {
-        if (tree_one_nodes.includes(crossover[i][0]) && tree_two_nodes.includes(crossover[i][1])) {
-            return true
-        } else if (tree_one_nodes.includes(crossover[i][1]) && tree_two_nodes.includes(crossover[i][0])) {
-            return true
-        }
-    }
+    // for (var i = 0; i < crossover.length; i++) {
+    //     if (tree_one_nodes.includes(crossover[i][0]) && tree_two_nodes.includes(crossover[i][1])) {
+    //         return true
+    //     } else if (tree_one_nodes.includes(crossover[i][1]) && tree_two_nodes.includes(crossover[i][0])) {
+    //         return true
+    //     }
+    // }
     return false
+
 }
 
 // Function which returns whether a given array has duplicates
